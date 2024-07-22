@@ -1,0 +1,236 @@
+To accomplish this, you'll need to integrate PHP and MySQL for server-side processing. Here's how you can modify your `index.php`, add `signup.php`, `login.php`, `dashboard.php`, and handle the session and database connection properly:
+
+### 1. Update `index.php`:
+
+Update the form actions to point to `signup.php` and `login.php` respectively:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in || Sign up from</title>
+    <!-- font awesome icons -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />-->
+    <link rel="stylesheet" href="../../../fontawesome-free-6.2.1-web/css/all.css">
+    <!-- css stylesheet -->
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+    <div class="container" id="container">
+        <div class="form-container sign-up-container">
+            <form action="signup.php" method="POST">
+                <h1>Create Account</h1>
+                <div class="social-container">
+                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <span>or use your email for registration</span>
+                <div class="infield">
+                    <i class="fas fa-user" id="icons"></i>
+                    <input type="text" placeholder="User Name" name="username" required>
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <i class="fas fa-envelope" id="icons"></i>
+                    <input type="email" placeholder="Email" name="email" required>
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <input type="password" placeholder="Password" name="password" required>
+                    <i id="eye" class="fas fa-eye"></i>
+                    <label></label>
+                </div>
+                <button name="signup">Submit</button>
+                <p class="animation_forms">Already have an account <a href=" ">LOGIN</a></p>
+            </form>
+        </div>
+        <div class="form-container sign-in-container">
+            <form action="login.php" method="POST">
+                <h1>Sign in</h1>
+                <div class="social-container">
+                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <span>or use your account</span>
+                <div class="infield">
+                    <i class="fas fa-envelope" id="icons"></i>
+                    <input type="email" placeholder="Email" name="email" required>
+                    <label></label>
+                </div><br>
+                <div class="infield">
+                    <input type="password" name="password" placeholder="Password" minlength="8" maxlength="16" required>
+                    <i id="eye" class="fas fa-eye"></i>
+                    <label></label>
+                </div>
+                <a href="../error/./error.html" class="forgot">Forgot your password?</a>
+                <button>Log In</button>
+                <p class="animation_forms">Don't have an account ?<a href="#">SIGNUP</a></p>
+            </form>
+        </div>
+        <div class="overlay-container" id="overlayCon">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Welcome   Back!</h1>
+                    <p>To keep connected with us please login with your personal info</p>
+                    <button style="margin-top: 5%;">Sign In</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Hello,🖐️ Friend!</h1>
+                    <p>Enter your personal details and start journey with us</p>
+                    <button>SIGN UP</button>
+                </div>
+            </div>
+            <button id="overlayBtn"></button>
+        </div>
+    </div>
+
+    <script src="./script.js"></script>
+
+</body>
+</html>
+```
+
+### 2. Create `signup.php`:
+
+```php
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "loyal";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+
+    $sql = "INSERT INTO users (username, email, password) VALUES ('$username', '$email', '$password')";
+
+    if ($conn->query($sql) === TRUE) {
+        header("Location: index.php");
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+}
+
+$conn->close();
+?>
+```
+
+### 3. Create `login.php`:
+
+```php
+<?php
+session_start();
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "loyal";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    $sql = "SELECT * FROM users WHERE email='$email'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        if (password_verify($password, $row['password'])) {
+            $_SESSION['username'] = $row['username'];
+            header("Location: dashboard.php");
+        } else {
+            echo "Invalid password";
+        }
+    } else {
+        echo "No account found with that email";
+    }
+}
+
+$conn->close();
+?>
+```
+
+### 4. Create `dashboard.php`:
+
+```php
+<?php
+session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: index.php");
+    exit();
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, <?php echo $_SESSION['username']; ?>!</h1>
+    <a href="logout.php">Logout</a>
+</body>
+</html>
+```
+
+### 5. Create `logout.php`:
+
+```php
+<?php
+session_start();
+session_unset();
+session_destroy();
+header("Location: index.php");
+?>
+```
+
+### Database Setup:
+
+Make sure you have a database named `loyal` with a table `users`:
+
+```sql
+CREATE DATABASE loyal;
+
+USE loyal;
+
+CREATE TABLE users (
+    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(30) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+```
+
+### Note:
+
+- Ensure you have PHP and MySQL properly configured on your server.
+- Update database connection details (`$servername`, `$username`, `$password`, `$dbname`) as per your setup.
+- Make sure your `fontawesome-free-6.2.1-web/css/all.css` file path is correct.
+
+This setup should handle user registration, login, session management, and redirection to a dashboard.
