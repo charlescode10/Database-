@@ -1,0 +1,89 @@
+To add background audio to your webpage that repeats and plays at 20% volume, you can use the HTML `<audio>` element along with some JavaScript to control the volume and looping. Here's how you can do it:
+
+### 1. Add the Audio Element to Your HTML
+
+Add the `<audio>` element to your `index.php` file. Set the `loop` attribute to make the audio repeat and use the `volume` attribute in JavaScript to set the volume to 20%.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in || Sign up form</title>
+    <!-- font awesome icons -->
+    <link rel="stylesheet" href="../../../fontawesome-free-6.2.1-web/css/all.css">
+    <!-- css stylesheet -->
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+    <div class="container" id="container">
+        <!-- Your existing code -->
+    </div>
+
+    <!-- Background audio -->
+    <audio id="background-audio" loop>
+        <source src="path/to/your/audio/file.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script src="./script.js"></script>
+</body>
+</html>
+```
+
+### 2. Control the Audio with JavaScript
+
+In your `script.js` file, set the volume of the audio to 20%.
+
+```javascript
+//form animation
+const container = document.getElementById('container');
+const overlayCon = document.getElementById('overlayCon');
+const overlayBtn = document.getElementById('overlayBtn');
+
+overlayBtn.addEventListener('click',()=>{
+    container.classList.toggle('right-panel-active');
+
+    overlayBtn.classList.remove('btnScaled');
+    window.requestAnimationFrame( ()=>{
+        overlayBtn.classList.add('btnScaled');
+    });
+});
+
+// Visibility of password
+document.querySelectorAll(".infield i").forEach((toggleBtn) =>{ 
+  toggleBtn.addEventListener('click',() =>{
+    const pswrdfield = toggleBtn.previousElementSibling;
+
+    if(pswrdfield.type === "password"){
+      pswrdfield.type = "text";
+      toggleBtn.classList.add("active");
+    }else{
+      pswrdfield.type = "password";
+      toggleBtn.classList.remove("active");
+    }
+  });
+});
+
+// Background audio
+const audio = document.getElementById('background-audio');
+audio.volume = 0.2;
+audio.play();
+```
+
+### Explanation:
+
+1. **HTML**:
+   - The `<audio>` element is added with the `id` attribute set to `background-audio`.
+   - The `loop` attribute is included to make the audio repeat.
+   - The `source` element inside the `<audio>` element should point to the path of your audio file.
+
+2. **JavaScript**:
+   - Select the audio element using `document.getElementById('background-audio')`.
+   - Set the volume to 0.2 (which is 20%) using `audio.volume = 0.2`.
+   - Start playing the audio using `audio.play()`.
+
+This setup will play the specified audio file in the background at 20% volume, and it will loop indefinitely. Make sure to replace `path/to/your/audio/file.mp3` with the actual path to your audio file.
