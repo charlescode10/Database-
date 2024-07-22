@@ -1,0 +1,141 @@
+To make your webpage responsive and achieve the desired behavior for smaller screens, you will need to modify both your CSS and JavaScript files. Here are the steps:
+
+### CSS Changes
+
+1. **Hide the overlay on smaller screens and display the `#reso` section:**
+
+```css
+@media (max-width: 768px) {
+    .overlay-container {
+        display: none;
+    }
+
+    .sign-in-container, .sign-up-container {
+        width: 100%;
+    }
+
+    #reso {
+        display: block;
+    }
+
+    .form-container {
+        width: 100%;
+    }
+
+    .container {
+        width: 100%;
+        height: auto;
+        box-shadow: none;
+        border-radius: 0;
+    }
+}
+```
+
+### JavaScript Changes
+
+2. **Add JavaScript to handle form switching on smaller screens:**
+
+```javascript
+document.addEventListener('DOMContentLoaded', () => {
+    const resoSignUp = document.querySelector('.sign-in-container #reso a');
+    const resoLogIn = document.querySelector('.sign-up-container #reso a');
+    const signInContainer = document.querySelector('.sign-in-container');
+    const signUpContainer = document.querySelector('.sign-up-container');
+
+    resoSignUp.addEventListener('click', (e) => {
+        e.preventDefault();
+        signInContainer.style.display = 'none';
+        signUpContainer.style.display = 'flex';
+    });
+
+    resoLogIn.addEventListener('click', (e) => {
+        e.preventDefault();
+        signUpContainer.style.display = 'none';
+        signInContainer.style.display = 'flex';
+    });
+});
+```
+
+### HTML Changes
+
+3. **Modify your HTML to include the `#reso` sections with appropriate links:**
+
+```html
+<div class="form-container sign-up-container">
+    <form action="signup.php" method="POST">
+        <h1>Create Account</h1>
+        <div class="social-container">
+            <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+            <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+        <span>or use your email for registration</span>
+        <div class="infield">
+            <i class="fas fa-user" id="icons"></i>
+            <input type="text" placeholder="User Name" name="username" required>
+            <label></label>
+        </div>
+        <div class="infield">
+            <i class="fas fa-envelope" id="icons"></i>
+            <input type="email" placeholder="Email" name="email" required>
+            <label></label>
+        </div>
+        <div class="infield">
+            <input type="password" placeholder="Password" name="password" minlength="8" maxlength="16" required>
+            <i id="eye" class="fas fa-eye"></i>
+            <label></label>
+        </div>
+        <button name="signup">Submit</button>
+        <div id="reso">
+            <p class="animation_forms">Already have an account? <a href="#">LOGIN</a></p>
+        </div>
+    </form>
+</div>
+<div class="form-container sign-in-container">
+    <form action="login.php" method="POST">
+        <h1>Sign In</h1>
+        <div class="social-container">
+            <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+            <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+        <span>or use your account</span>
+        <div class="infield">
+            <i class="fas fa-envelope" id="icons"></i>
+            <input type="email" placeholder="Email" name="email" required>
+            <label></label>
+        </div><br>
+        <div class="infield">
+            <input type="password" name="password" placeholder="Password" minlength="8" maxlength="16" required>
+            <i id="eye" class="fas fa-eye"></i>
+            <label></label>
+        </div>
+        <a href="../error/./error.html" class="forgot">Forgot your password?</a>
+        <button>Log In</button>
+        <div id="reso">
+            <p class="animation_forms">Don't have an account? <a href="#">SIGNUP</a></p>
+        </div>
+    </form>
+</div>
+```
+
+### Final Adjustments
+
+4. **Ensure the CSS transitions for the form switching are smooth:**
+
+```css
+@media (max-width: 768px) {
+    .sign-up-container,
+    .sign-in-container {
+        display: none;
+        transition: display 0.6s ease-in-out;
+    }
+
+    .sign-up-container.active,
+    .sign-in-container.active {
+        display: flex;
+    }
+}
+```
+
+By implementing these changes, your forms will be responsive and maintain a good user interface on smaller screens, hiding the overlay and enabling smooth form transitions.
