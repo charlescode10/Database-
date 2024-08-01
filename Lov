@@ -1,0 +1,362 @@
+To achieve the layout you described, you can adjust the CSS to use Flexbox for arranging the `.intro` and `.versions` divs side by side and then use media queries to adjust the layout for smaller screens. Here is an updated version of your HTML and CSS:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../fontawesome-free-6.2.1-web/./css/./all.css">
+</head>
+<style>
+    body{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        position: relative;
+    }
+
+    :root {
+        --linear-grad: linear-gradient(to right, #141E30, #243B55);
+        --grad-clr1: #141E30;
+        --grad-clr2: #243B55;
+        --grad-clr3: #fff;
+    }
+
+    .container{
+        display: flex;
+        width: 100%;
+        height: 100%;
+    }
+
+    .intro, .versions{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50%;
+        height: 100%;
+    }
+
+    .intro{
+        background: var(--linear-grad);
+        color: var(--grad-clr3);
+        text-align: center;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .versions{
+        background: var(--linear-grad);
+        gap: 50px;
+    }
+
+    .versions i{
+        font-style: 100px;
+        color: var(--grad-clr3);
+        cursor: pointer;
+        transition: transform 0.3s, color 0.3s;
+        font-size: 100px;
+    }
+
+    .versions i:hover{
+        transform: scale(1.2);
+        color: var(--grad-clr1);
+    }
+
+    .versions i:active{
+        transform: scale(0.9);
+    }
+
+    .loading{
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 100;
+    }
+
+    .loading img{
+        width: 100px;
+        height: 100px;
+    }
+
+    .loading.active{
+        display: block;
+    }
+
+    .overlay{
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.7);
+        z-index: 99;
+    }
+
+    .overlay.active{
+        display: block;
+    }
+
+    @media (max-width: 768px) {
+        .container{
+            flex-direction: column;
+        }
+
+        .intro, .versions{
+            width: 100%;
+            height: 50%;
+        }
+    }
+</style>
+<body>
+
+    <div class="container">
+        <div class="intro">
+            <p>Choose the version you would like to use</p>
+        </div>
+
+        <div class="versions">
+            <i class="fas fa-tablet" onclick="navigate('tele/')" title="Phone"></i>
+            <i class="fas fa-computer" onclick="navigate('AUTH/')" title="Computer"></i>
+        </div>
+    </div>
+
+    <div class="loading" id="loading">
+        <img src="./gif/loading.gif" alt="Loading...">
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <script>
+        function navigate(url) {
+            var loading = document.getElementById('loading');
+            var overlay = document.getElementById('overlay');
+
+            loading.classList.add('active');
+            overlay.classList.add('active');
+
+            setTimeout(function(){
+                window.location.href= url;
+            },2500)
+        }
+    </script>
+
+</body>
+</html>
+```
+
+This code ensures that the `.intro` and `.versions` divs are each 50% of the width on larger screens and stack vertically on smaller screens, with the loading gif and overlay responding appropriately.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+To add an auto-reload to your site after 5 seconds, you can use JavaScript's `setTimeout` function to refresh the page. Here's how you can do it:
+
+1. Add the following script to your HTML file, preferably just before the closing `</body>` tag:
+
+```html
+<script>
+    // Function to reload the page after 5 seconds
+    function autoReload() {
+        setTimeout(function() {
+            location.reload();
+        }, 5000); // 5000 milliseconds = 5 seconds
+    }
+
+    // Call the autoReload function
+    autoReload();
+</script>
+```
+
+With this addition, your HTML file will look like this:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../fontawesome-free-6.2.1-web/./css/./all.css">
+</head>
+<style>
+    body{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        position: relative;
+    }
+
+    :root {
+        --linear-grad: linear-gradient(to right, #141E30, #243B55);
+        --grad-clr1: #141E30;
+        --grad-clr2: #243B55;
+        --grad-clr3: #fff;
+    }
+
+    .container{
+        display: flex;
+        width: 100%;
+        height: 100%;
+    }
+
+    .intro, .versions{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50%;
+        height: 100%;
+    }
+
+    .intro{
+        background: var(--linear-grad);
+        color: var(--grad-clr3);
+        text-align: center;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .versions{
+        background: var(--linear-grad);
+        gap: 50px;
+    }
+
+    .versions i{
+        font-style: 100px;
+        color: var(--grad-clr3);
+        cursor: pointer;
+        transition: transform 0.3s, color 0.3s;
+        font-size: 100px;
+    }
+
+    .versions i:hover{
+        transform: scale(1.2);
+        color: var(--grad-clr1);
+    }
+
+    .versions i:active{
+        transform: scale(0.9);
+    }
+
+    .loading{
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 100;
+    }
+
+    .loading img{
+        width: 100px;
+        height: 100px;
+    }
+
+    .loading.active{
+        display: block;
+    }
+
+    .overlay{
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.7);
+        z-index: 99;
+    }
+
+    .overlay.active{
+        display: block;
+    }
+
+    @media (max-width: 768px) {
+        .container{
+            flex-direction: column;
+        }
+
+        .intro, .versions{
+            width: 100%;
+            height: 50%;
+        }
+    }
+</style>
+<body>
+
+    <div class="container">
+        <div class="intro">
+            <p>Choose the version you would like to use</p>
+        </div>
+
+        <div class="versions">
+            <i class="fas fa-tablet" onclick="navigate('tele/')" title="Phone"></i>
+            <i class="fas fa-computer" onclick="navigate('AUTH/')" title="Computer"></i>
+        </div>
+    </div>
+
+    <div class="loading" id="loading">
+        <img src="./gif/loading.gif" alt="Loading...">
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <script>
+        function navigate(url) {
+            var loading = document.getElementById('loading');
+            var overlay = document.getElementById('overlay');
+
+            loading.classList.add('active');
+            overlay.classList.add('active');
+
+            setTimeout(function(){
+                window.location.href= url;
+            },2500)
+        }
+
+        // Function to reload the page after 5 seconds
+        function autoReload() {
+            setTimeout(function() {
+                location.reload();
+            }, 5000); // 5000 milliseconds = 5 seconds
+        }
+
+        // Call the autoReload function
+        autoReload();
+    </script>
+
+</body>
+</html>
+```
+
+This script will ensure that your page automatically reloads every 5 seconds.
