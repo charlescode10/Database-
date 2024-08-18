@@ -1,0 +1,167 @@
+Here's a basic implementation in HTML, CSS, and JavaScript that creates a form where you can choose a heading, number of columns, and rows for a table. The table is generated dynamically with options to add more rows or columns by clicking a plus (+) icon. You can also type text inline directly in the table.
+
+### HTML, CSS, and JavaScript Code
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Table Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-container {
+            margin-bottom: 20px;
+        }
+        .form-container input, .form-container button {
+            margin-right: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            min-width: 100px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .add-btn {
+            cursor: pointer;
+            color: #007bff;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+        .add-btn:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <input type="text" id="reportHeading" placeholder="Enter Report Heading">
+    <input type="number" id="columns" placeholder="Number of Columns" min="1">
+    <input type="number" id="rows" placeholder="Number of Rows" min="1">
+    <button onclick="generateTable()">Create Table</button>
+</div>
+
+<h2 id="tableHeading"></h2>
+<div id="tableContainer"></div>
+
+<script>
+function generateTable() {
+    const heading = document.getElementById("reportHeading").value;
+    const columns = parseInt(document.getElementById("columns").value);
+    const rows = parseInt(document.getElementById("rows").value);
+
+    if (!heading || isNaN(columns) || isNaN(rows) || columns < 1 || rows < 1) {
+        alert("Please enter valid inputs for the heading, number of columns, and number of rows.");
+        return;
+    }
+
+    document.getElementById("tableHeading").innerText = heading;
+
+    const tableContainer = document.getElementById("tableContainer");
+    tableContainer.innerHTML = ""; // Clear any existing table
+
+    const table = document.createElement("table");
+    const thead = document.createElement("thead");
+    const tbody = document.createElement("tbody");
+
+    // Create the header row
+    const headerRow = document.createElement("tr");
+    for (let i = 0; i < columns; i++) {
+        const th = document.createElement("th");
+        th.contentEditable = true;
+        th.innerText = `Column ${i + 1}`;
+        headerRow.appendChild(th);
+    }
+    // Add the "+" button for adding a new column
+    const addColumnTh = document.createElement("th");
+    addColumnTh.innerHTML = `<span class="add-btn" onclick="addColumn()">+ Add Column</span>`;
+    headerRow.appendChild(addColumnTh);
+
+    thead.appendChild(headerRow);
+
+    // Create the rows
+    for (let i = 0; i < rows; i++) {
+        const tr = document.createElement("tr");
+        for (let j = 0; j < columns; j++) {
+            const td = document.createElement("td");
+            td.contentEditable = true;
+            td.innerText = `Row ${i + 1}, Column ${j + 1}`;
+            tr.appendChild(td);
+        }
+        // Add the "+" button for adding a new row
+        const addRowTd = document.createElement("td");
+        addRowTd.innerHTML = `<span class="add-btn" onclick="addRow(${i})">+ Add Row</span>`;
+        tr.appendChild(addRowTd);
+
+        tbody.appendChild(tr);
+    }
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    tableContainer.appendChild(table);
+}
+
+function addColumn() {
+    const table = document.querySelector("table");
+    const headerRow = table.querySelector("thead tr");
+    const rows = table.querySelectorAll("tbody tr");
+
+    // Add a new header cell
+    const th = document.createElement("th");
+    th.contentEditable = true;
+    th.innerText = `New Column`;
+    headerRow.insertBefore(th, headerRow.lastChild); // Insert before the "+" button
+
+    // Add new cells to each row
+    rows.forEach(row => {
+        const td = document.createElement("td");
+        td.contentEditable = true;
+        td.innerText = `New Cell`;
+        row.insertBefore(td, row.lastChild); // Insert before the "+" button
+    });
+}
+
+function addRow(rowIndex) {
+    const table = document.querySelector("table");
+    const tbody = table.querySelector("tbody");
+    const columns = table.querySelector("thead tr").children.length - 1; // Exclude the "+" column
+
+    // Create a new row
+    const tr = document.createElement("tr");
+    for (let i = 0; i < columns; i++) {
+        const td = document.createElement("td");
+        td.contentEditable = true;
+        td.innerText = `New Row Cell`;
+        tr.appendChild(td);
+    }
+    // Add the "+" button for adding a new row
+    const addRowTd = document.createElement("td");
+    addRowTd.innerHTML = `<span class="add-btn" onclick="addRow(${tbody.children.length})">+ Add Row</span>`;
+    tr.appendChild(addRowTd);
+
+    tbody.appendChild(tr);
+}
+</script>
+
+</body>
+</html>
+```
+
+### Explanation:
+- The user enters a report heading, number of columns, and number of rows.
+- After clicking the "Create Table" button, the table is generated dynamically with the specified dimensions.
+- You can add more columns and rows using the "+" icons. Each cell is content-editable, allowing inline text input.
+- The table is responsive and well-styled with simple CSS.
